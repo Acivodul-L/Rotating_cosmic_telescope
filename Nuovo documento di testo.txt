@@ -1,0 +1,162 @@
+documentclass{article}
+usepackage[utf8]{inputenc}
+usepackage[utf8]{inputenc}
+usepackage[section]{placeins}
+usepackage[italian]{babel}
+usepackage{amsmath,graphicx,hyperref, float}
+usepackage[letterpaper,top=2cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+usepackage{makecell, verbatim}
+
+title{LOGBOOK}
+author{}
+date{}
+
+begin{document}
+maketitle
+
+section{Obiettivi e divisione temporale}
+11 volte $sim$ 44h
+
+1 entree
+
+3 (11-18) primi 2 punti scheda (punto di lavoro)
+3 (20-27) punti 2-4 ()
+3 (2-9) punti 4-6 (analisi dati)
+
+
+section{61125}
+subsection{Punto 1}
+Ritardo segnale-segnale discriminato = 16 ns, da cursori oscilloscopio 
+Collegati PMT1, PMT2, PMT4. Siamo a 825V su ciascuno, trigger discriminatore a -20mV causa segnali piccoli, per appunto voltaggio minimo (i segnali si vedevano da 770V circa). Misuriamo efficienza PMT2
+
+
+
+begin{table}[H]
+    centering
+begin{tabular}{cccccc}
+hline
+    Potenziale PMT2 (V) & PMT1 & PMT2 & PMT4 & triple & doppie 1&4 
+    hline
+    825 &  1718 & 1428 & 4006 & 35 & 38 
+    hline 
+    800 & 1719 & 1165 & 3401 & 40 & 44
+    hline
+    775 & 1675 & 910 & 3122 & 13 & 28
+    hline
+    750 & 1711 & 547 & 3154 & 8 & 33
+    hline
+    724 & 1373 & 239 & 3123 & 1 & 31
+    hline
+    850 & 1678 & 1809 & 3091 & 37 & 40
+    hline
+    875 & 1669 & 2535 & 3771 & 32 & 36
+    hline
+    788 & 1600 & 1135 & 4124 & 21 & 28 
+    hline
+    813 & 1743 & 1318 & 2551 & 34 & 36
+    hline
+    838 & 1628 & 1536 & 3166 & 24 & 28
+    hline
+    
+end{tabular}
+caption{Su 100s di misurazione, PMT1 e PMT4 a 825V}
+end{table}
+
+Iniziamo lasciando 1, 4 a 825V a caso. Troviamo il punto di lavoro iterativamente variamo V di PMT2 per qualche punto, troviamo l'efficienza, vediamo il plateau, mettiamo 1,4 su V sul plateau e riprendiamo le misure variando PMT2 con i nuovi valori di 1,4. 
+Dopo aver preso i punti, abbiamo notato che il plateau va da circa 800V a 860V, quindi 825V come punto di lavoro va bene e non dobbiamo riprendere i dati.
+
+begin{figure}[h]
+    centering
+    includegraphics[width=1.0linewidth]{ESPERIENZA1.1.png}
+    caption{}
+    label{figenter-label}
+end{figure}
+
+Conteggio accidentali (sono circa dell'ordine di $10^{-3}$ in 100s) 
+begin{equation}
+    R_{accidentali} = R_{i} R_{j}(Delta T_{i}+Delta T_{j}-2tau_{min}) = 8,6  10^(-6)
+end{equation}
+dove $R_{i,j}$ sono i conteggi delle doppie su 100s rispettivamente di PMT1, PMT4 $Delta T_{i}sim51.2 ns$, $Delta T_{j}sim78 ns$, $tau_{min}sim2 ns$. 
+Si vede quindi che possiamo trascurarle.
+
+subsection{Punto 1.2}
+Riprendiamo le stesse misure MA per calcolare il rate di triple su doppie di PMT1 e PMT4, così poi, ricalcolando l'accettanza col Montecarlo, troviamo l'efficienza di questi 2. Sicuramente usciranno valori non accurati, ma quello che ci importa è farne i grafici e poter osservare che la zona di plateau si sovrappone con quella dell'efficienza del PMT2 (misura di cui invece ci possiamo fidare, accurata); riconfermiamo così che ha senso considerare 825V un buon punto di lavoro, ANCHE per PMT1 e PMT4, che sono poi i PMT che ci servono per le misure dei punti successivi.
+DA FARE LE PROSSIME VOLTE ACCETTANZE SU ROOT, RICALCOLO EFFICIENZE DI PMT1,PMT4 PIù GRAFICI 
+POI REMINDER Per il punto 2 della relazione, consideriamo le doppie di tabella 1 e angolo $theta=0$ (angolo piccolo) e calcoliamo $I_{0}$.
+Poi, simuliamo su Root un flusso verticale che va sui PMT1, PMT4 e ne estrapoliamo il valore di $I_{0}$, che consideriamo come valore accurato da confrontare con quello calcolato dalle misure. Così facendo, possiamo capire quant'è l'area efficace dei nostri PMT vedendo $frac{I_{0}, misurato}{I_{0}, simulato}$
+
+
+begin{table}[H]
+    centering
+begin{tabular}{cccccc}
+hline
+    Potenziale PMT1 (V) & PMT1 & PMT2 & PMT4 & triple & doppie 2&4 
+    hline
+    825 &  1721 & 1466 & 5279 & 33 & 59 
+    hline 
+    800 & 
+    hline
+    775 & 8
+    hline
+    750 & 
+    hline
+    724 & 
+    hline
+    850 & 
+    hline
+    875 & 
+    hline
+    788 &  
+    hline
+    813 & 
+    hline
+    838 & 
+    hline
+    
+end{tabular}
+caption{Su 100s di misurazione, PMT2 e PMT4 a 825V}
+end{table}
+
+
+
+begin{table}[H]
+    centering
+begin{tabular}{cccccc}
+hline
+    Potenziale PMT4 (V) & PMT1 & PMT2 & PMT4 & triple & doppie 1&2 
+    hline
+    825 &   
+    hline 
+    800 & 
+    hline
+    775 & 
+    hline
+    750 & 
+    hline
+    724 & 
+    hline
+    850 & 
+    hline
+    875 & 
+    hline
+    788 &  
+    hline
+    813 & 
+    hline
+    838 & 
+    hline
+    
+end{tabular}
+caption{Su 100s di misurazione, PMT2 e PMT1 a 825V}
+end{table}
+
+
+
+
+
+
+
+
+
+
+end{document}
