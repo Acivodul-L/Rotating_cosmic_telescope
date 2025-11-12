@@ -1,0 +1,39 @@
+#Per vedere che file ci sono nella cartella corrente:
+"
+dir (Windows)
+"
+
+"
+ls  (linux)
+"
+
+#Per passare ad una sottocartella:
+"
+cd Nome_sottocartella
+"
+
+#Per uscire dalla cartella corrente:
+"
+cd ..
+"
+
+#Per copiare la cartella sul proprio computer la prima volta:
+"
+git clone git@github.com:Acivodul-L/Rotating_cosmic_telescope.git
+"
+
+#Per aggiornare la cartella quando qualcun'altro fa delle modiifiche (è buona abitudine farlo ogni volta che si lavora sulla cartella)
+"
+git pull
+"
+
+#Per "salvare" le modifiche fatte sulla cartella in locale
+"
+git add --all
+"
+
+#Per sovrascrivere la cartella su github in modo che possano vederla tutti i collaboratori:
+"
+git commit -m "Messaggio con indicazioni sulle modifiche"
+git push
+"
