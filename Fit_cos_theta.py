@@ -22,9 +22,9 @@ pairs = np.array([363, 345, 270, 168, 97, 37, 307])
 singles_1 = np.array([15214, 14794, 13799, 11703, 10643, 17634, 13607])
 singles_2 = np.array([14333, 14019, 12885, 11694, 10523, 9070, 13420])
 singles_4 = np.array([48655, 48802, 20104, 43267, 41415, 38915, 41242])
-DT = 1000 #Tempo di integrazione
-eff = triples/pairs #Da aggiustare con l'accettanza geometrica
-d_eff = np.sqrt(eff*(1-eff)/pairs)
+DT = 1000 #s Tempo di integrazione
+eff = 0.9 #Da aggiustare con l'accettanza geometrica
+d_eff = np.sqrt(eff*(1-eff)/pairs) #Da aggiustare con i dati di PMT 1 o 4 a 825 V 
 S = 0.2 * 0.4 #m^2
 Omega = 0.043 #str
 
