@@ -498,7 +498,7 @@ stop presa dati ore : \\
 \hline
      PMT1 & PMT2 & PMT4 & triple & doppie 1\&4 \\
     \hline
-     &  &  &  &   \\
+     765830&774706  &3345766  &9321  &11643   \\
     \hline
     
 \end{tabular}

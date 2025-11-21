@@ -6,134 +6,121 @@ from scipy.optimize import curve_fit
 def custom_model(x, A, B, alpha, C):
     """
     Modello matematico da fittare: A * cos(x + B)^alpha + C
-    
-    Si utilizza np.abs() per la stabilità numerica (evitare numeri complessi)
-    nel caso in cui np.cos(x + B) sia negativo e alpha non sia un intero.
+    Si utilizza np.abs() per stabilità numerica.
     """
     return A * (np.abs(np.cos(x + B)) ** alpha) + C
 
-# --- 2. Dati Esempio con Incertezze ---
+# --- 2. Dati e Costanti ---
 # Vettore x
 angles = np.array([0, np.pi/12, np.pi/6, np.pi/4, np.pi/3, np.pi/2, np.pi])
 
-# Vettori y (Dati)
+# Vettori y (Conteggi)
 triples = np.array([312, 287, 224, 132, 74, 16, 264])
 pairs = np.array([363, 345, 270, 168, 97, 37, 307])
 singles_1 = np.array([15214, 14794, 13799, 11703, 10643, 17634, 13607])
-singles_2 = np.array([14333, 14019, 12885, 11694, 10523, 9070, 13420])
 singles_4 = np.array([48655, 48802, 20104, 43267, 41415, 38915, 41242])
-DT = 1000 #s Tempo di integrazione
-eff = 0.9 #Da aggiustare con l'accettanza geometrica
-d_eff = np.sqrt(eff*(1-eff)/pairs) #Da aggiustare con i dati di PMT 1 o 4 a 825 V 
-S = 0.2 * 0.4 #m^2
-Omega = 0.043 #str
 
-R_pairs_fake = (singles_1/DT) * (singles_4/DT) * (51e-9 + 78e-9 - 2*2e-9)
-R_triples_fake = 0 # Calcola quante sono le triple accidentali
+DT = 1000.0   # s, Tempo di integrazione
+eff = 0.95    # Efficienza (senza errore associato come richiesto)
+S = 0.2 * 0.4 # m^2, Area
+Omega = 0.043 # str, Angolo solido
 
-#Incertezze sulle coppie e triple
-d_pairs = np.sqrt(pairs)
-d_triples = np.sqrt(triples * (1 - triples / pairs) ) 
+# Calcolo Accidentali
+# Nota: La formula delle coincidenze casuali (Rate = R1*R2*DeltaT) dipende dalla larghezza delle finestre
+# Assumo che i numeri (51e-9, etc.) siano le larghezze temporali corrette in secondi.
+width_coinc = (51e-9 + 78e-9 - 2*2e-9) 
+R_pairs_fake = (singles_1/DT) * (singles_4/DT) * width_coinc
+R_triples_fake = 0 # Trascurabile o non definito
 
-flux_pairs = (pairs - DT*R_pairs_fake)/(Omega * S * DT * eff)
-d_flux_pairs= flux_pairs * np.sqrt((d_pairs/pairs)**2 + (d_eff/eff)**2)
+# --- 3. Calcolo Flussi e Incertezze ---
 
-flux_triples = (triples - DT*R_triples_fake)/(Omega * S * DT * eff)
-d_flux_triples= flux_triples * np.sqrt((d_triples/triples)**2 + (d_eff/eff)**2)
+# Incertezze statistiche sui conteggi (Poisson: sqrt(N))
+# NOTA: Usiamo sqrt(N) perché stiamo calcolando un flusso assoluto, 
+# non un rapporto di efficienza binomiale.
+d_pairs_counts = np.sqrt(pairs)
+d_triples_counts = np.sqrt(triples) 
 
-# Parametri iniziali (stima iniziale comune per i 4 parametri: A, B, alpha, C)
-p0_initial = [100, 0.0, 2.5, 0.0] 
+# Fattore di normalizzazione comune
+norm_factor = Omega * S * DT * eff
 
-# --- 3. Esecuzione dei Fit ---
+# Calcolo Flussi
+flux_pairs = (pairs - (DT * R_pairs_fake)) / norm_factor
+flux_triples = (triples - (DT * R_triples_fake)) / norm_factor
 
-# Dizionari per memorizzare i risultati
+# Propagazione errori (Semplificata senza d_eff)
+# Se F = N / K, allora sigma_F = sigma_N / K
+d_flux_pairs = d_pairs_counts / norm_factor
+d_flux_triples = d_triples_counts / norm_factor
+
+# Parametri iniziali (A, B, alpha, C)
+p0_initial = [100, 0.0, 2.0, 0.0] 
+
+# --- 4. Esecuzione dei Fit ---
+
 results = {
-    'pairs': {'data': flux_pairs, 'unc': d_flux_pairs, 'popt': None, 'pcov': None},
-    'triples': {'data': flux_triples, 'unc': d_flux_triples, 'popt': None, 'pcov': None}
+    'pairs': {'data': flux_pairs, 'unc': d_flux_pairs, 'popt': None},
+    'triples': {'data': flux_triples, 'unc': d_flux_triples, 'popt': None}
 }
 
 for name in results:
     y_data = results[name]['data']
     y_unc = results[name]['unc']
     
-    print(f"\n Esecuzione del Fit ({name.capitalize()})...")
+    print(f"\n--- Fit {name.capitalize()} ---")
     
     try:
+        # absolute_sigma=True è CRUCIALE quando si forniscono errori fisici reali (y_unc)
         popt, pcov = curve_fit(
             f=custom_model, 
             xdata=angles, 
             ydata=y_data, 
             p0=p0_initial, 
             sigma=y_unc, 
-            absolute_sigma=False
+            absolute_sigma=True 
         )
         
-        # Salvataggio dei risultati
         results[name]['popt'] = popt
-        results[name]['pcov'] = pcov
-        
-        # Calcolo degli errori standard e del chi-quadro ridotto
         perr = np.sqrt(np.diag(pcov)) 
         
+        # Calcolo Chi-Quadro
         residuals = y_data - custom_model(angles, *popt)
         chi_squared = np.sum((residuals / y_unc)**2)
         dof = len(angles) - len(popt)
-        chi_squared_reduced = chi_squared / dof if dof > 0 else np.nan
+        chi_red = chi_squared / dof if dof > 0 else np.nan
 
-        # Stampa dei risultati
-        A_fit, B_fit, alpha_fit, C_fit = popt
-        A_err, B_err, alpha_err, C_err = perr
-        
-        print(f"--- Risultati {name.capitalize()} ---")
-        print(f"Parametri trovati (A, B, alpha, C):")
-        print(f"A: {A_fit:.4f} ± {A_err:.4f}")
-        print(f"B: {B_fit:.4f} ± {B_err:.4f}")
-        print(f"alpha: {alpha_fit:.4f} ± {alpha_err:.4f}")
-        print(f"C: {C_fit:.4f} ± {C_err:.4f}")
-        print(f"Chi-quadro ridotto: {chi_squared_reduced:.3f}")
+        print(f"A:     {popt[0]:.4f} ± {perr[0]:.4f}")
+        print(f"B:     {popt[1]:.4f} ± {perr[1]:.4f}")
+        print(f"alpha: {popt[2]:.4f} ± {perr[2]:.4f}")
+        print(f"C:     {popt[3]:.4f} ± {perr[3]:.4f}")
+        print(f"Chi^2 ridotto: {chi_red:.3f}")
 
-    except RuntimeError:
-        print(f"Fit {name.capitalize()} fallito: Impossibile trovare i parametri ottimali.")
-    except ZeroDivisionError:
-        print(f"Fit {name.capitalize()} fallito: Errore di divisione per zero (controlla incertezze).")
+    except Exception as e:
+        print(f"Fit fallito: {e}")
 
+# --- 5. Plotting ---
 
-# --- 4. Visualizzazione dei Risultati ---
-
-# Controlla se entrambi i fit sono riusciti prima di plottare
 if results['pairs']['popt'] is not None and results['triples']['popt'] is not None:
-    plt.figure(figsize=(12, 7))
-
-    # Generazione dei punti per le curve di fit
+    plt.figure(figsize=(10, 6))
+    
+    # Griglia densa per le curve
     x_fit = np.linspace(np.min(angles), np.max(angles), 500)
 
-    # Plot del Fit PAIRS
-    popt_pairs = results['pairs']['popt']
-    y_fit_pairs = custom_model(x_fit, *popt_pairs)
-    
+    # Plot Pairs
     plt.errorbar(angles, flux_pairs, yerr=d_flux_pairs, fmt='o', color='blue', 
-                 ecolor='lightblue', capsize=4, label='Flusso di coppie')
-    
-    plt.plot(x_fit, y_fit_pairs, 'b-', 
-             label=f'Fit Pairs: A={popt_pairs[0]:.2f}, \u03B1={popt_pairs[2]:.2f}')
+                 capsize=5, label='Dati Pairs')
+    plt.plot(x_fit, custom_model(x_fit, *results['pairs']['popt']), 'b-', alpha=0.7,
+             label=f"Fit Pairs ($\\alpha={results['pairs']['popt'][2]:.2f}$)")
 
-    # Plot del Fit TRIPLES
-    popt_triples = results['triples']['popt']
-    y_fit_triples = custom_model(x_fit, *popt_triples)
-
+    # Plot Triples
     plt.errorbar(angles, flux_triples, yerr=d_flux_triples, fmt='s', color='red', 
-                 ecolor='salmon', capsize=4, label='Dati Triples con incertezze')
-                 
-    plt.plot(x_fit, y_fit_triples, 'r--', 
-             label=f'Fit Triples: A={popt_triples[0]:.2f}, \u03B1={popt_triples[2]:.2f}')
+                 capsize=5, label='Dati Triples')
+    plt.plot(x_fit, custom_model(x_fit, *results['triples']['popt']), 'r--', alpha=0.7,
+             label=f"Fit Triples ($\\alpha={results['triples']['popt'][2]:.2f}$)")
 
-
-    plt.title(r'Fit Non Lineare $y = A \cdot |\cos(x+B)|^\alpha + C$ (Pairs vs Triples)')
-    plt.xlabel('Angolo x (radianti)')
-    plt.ylabel('Conteggi y')
+    plt.title(r'Fit Flusso di Muoni: $I(\theta) = I_0 \cos^\alpha(\theta + \phi) + C$')
+    plt.xlabel('Angolo Zenitale [rad]')
+    plt.ylabel('Flusso [particelle / ($s \cdot m^2 \cdot sr$)]')
     plt.legend()
-    plt.grid(True, linestyle=':')
+    plt.grid(True, linestyle=':', alpha=0.6)
+    
     plt.show()
-
-else:
-    print("\n Plot non generato perché almeno uno dei fit è fallito.")
