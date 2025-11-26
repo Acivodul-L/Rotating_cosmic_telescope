@@ -555,22 +555,67 @@ NB il sigma che prendevamo dalle distribuzioni, NON è l'errore sul campione, ma
 Per prendere le misure con lunghezza del segnale discriminato < 39ns, aumentiamo il ritardo dal delay NIM di +16ns---> INVECE NO cazzata, il PMT4 arriva a 33ns si gode.\\
 
 Iniziamo a prendere le misure lunghe girando in senso antiorario: inizio presa dati h 18:28 .\\
-Fine presa dati h 8: .\\
+Presa dati a 45° iniziata il 25/11, inizio 18:28, stop presa dati ore 9:01 del 26/11 \\
 \begin{table}[H]
     \centering
 \begin{tabular}{|c|c|c|c|c|c|}
 \hline
      PMT1 & PMT2 & PMT4 & triple & doppie 1\&4 \\
     \hline
-     & &  &  &  \\
+    673483 & 641943 & 3189050 & 8404 & 10780   \\
     \hline
     
 \end{tabular}
-\caption{Conteggi su $\sim16 h$, a 45° verso antiorario}
+\caption{Conteggi su $\sim14.5 $ h, a 45° nel senso antiorario}
 \end{table}
+
 
 NB paoloni suggerisce di giocare sul ritardo dal delay NIM e tenere invece lunghezza segnale discriminato costante perchè in pratica i nostri dati fittano da far schifo.\\
 
 
+\section{26/11}
+\subsection{Soluzione al problema del segnale discriminato del 4 che balla}
+Paoloni suggerisce di mandare il segnale discriminato 4 in coincidenza da solo (possiamo usare l'unità di coincidenza finora usata per le triple, che in questo momento non ci interessano). Prendiamo in uscita a questa coincidenza il segnale OUT, che è un impulso di durata fissata (larghezza a metà altezza $\sim10$ ns), e lo mettiamo in coincidenza con il segnale discriminato 1. Siamo felici perché questo impulso non balla (a differenza dell'uscita corrispondente LIN, che ancora balla).
+
+A questo punto facciamo il solito giochino dei ritardi, stavolta però la durata $\Delta t_4$ è fissata ($\sim 10$ ns), come anche la durata del segnale 1 ($\Delta t_1\sim 51$ ns, lasciata invariata rispetto alle misure prese durante la notte) e, per vedere l'asimmetria, varieremo il ritardo introdotto per il segnale 1. Nota che in questa configurazione introduciamo dei ritardi diversi nel segnale 4: cavi (+3+2 ns \textcolor{red}{QUELLO DALLA COINCIDENZA DEL 4 CON SE STESSO ALLA COINCIDENZA 1$\&$4 È DA 2 ns!!!}) + ritardo della coincidenza; cosa che ci interessa il giusto perché tanto faremo il plot. Senza introdurre ritardo nel segnale 1, con telescopio dritto vediamo un ritardo dai segnali all'oscilloscopio di $\sim 15$ ns. I cavi dell'1 (in entrata e in uscita dalla scatola dei ritardi) sono +3+3 ns.
+
+Stimiamo a naso l'intervallo di ritardo per cui, nel caso UP (telescopio dritto), ci aspettiamo di selezionare solo i raggi che vengono dall'alto. Dai ragionamenti fatti precedentemente, si è trovato $R - TOF + s \le \Delta t_4 \le R + TOF$ (s sovrapposizione, al minimo 2 ns, mentre $R = r_{scatola} + r_{1,cavi}-r_{4,cavi+coinc}$). $r_{scatola}$ la variamo; $r_{1,cavi}=(+3+3)$ ns (discr1 $\rightarrow$ ritardo + ritardo $\rightarrow$ coinc); $r_{4,cavi+coinc}=(+15 ns - TOF+2)$ ns (ritardo misurato all'oscilloscopio precedentemente comprende anche il tempo di volo, poi aggiungo anche il cavo dall'auto-coincidenza alla coincidenza con l'1 (+2 ns)). Invertendo la relazione sopra si ottiene un range per R, e di conseguenza per $r_{scatola}$ si ha range $11ns\sim \Delta t_4- 2TOF+11 ns\le r_{scatola}\le \Delta t_4+TOF-s\sim19 ns$. 11 ns nel limite inferiore viene da +3+3-(15+2).
+
+Di seguito, dati:
+
+\begin{table}[H]
+    \centering
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+     Ritardo(+3 cavo) [ns] & sovrapp [ns] & doppie 1\&4UP & doppie 1\&4DOWN \\
+    \hline
+     8 & - & 403 &  \\
+    \hline
+     14 & - & 345 &  \\
+    \hline
+    20 & - & 74 &  \\
+    \hline
+    
+\end{tabular}
+\caption{MISURE RI-RI-RI-PRESE, per 1000 s}
+\end{table}
+
+Una rapida stima di tempistiche: prendiamo una decina di misure su e giù (o anche meno), per 1000 s $\sim 15$ min a misura, quindi ci serviranno 5 ore totali - questa volta e la prossima, eventualmente parte di quella dopo (? speriamo). Poi ci rimangono 4 x 4 ore per vedere deonano e la misura del TOF al variare dell'angolo (che possiamo effettuare col deonano, se funziona). 
+
+Continuiamo domani con le misure, per ora abbiamo 3 punti (sigh sigh) per le UP. Giriamo a 90° in senso antiorario, start alle 10:28.
+
+\section{27/11}
+Presa dati a 90° iniziata il 26/11, inizio 10:28 stop presa dati ore ... del 27/11: \\
+\begin{table}[H]
+    \centering
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline
+     PMT1 & PMT2 & PMT4 & triple & doppie 1\&4 \\
+    \hline
+     &  &  &  &  \\
+    \hline
+\end{tabular}
+\caption{Conteggi su $\sim$ ... h, a 90° in senso antiorario}
+\end{table}
 
 \end{document}
