@@ -53,7 +53,7 @@ def geometric_factor_montecarlo(L1, W1, L2, W2, Z, N=1000000):
 # --- Esempio d'Uso (Assumiamo Rivelatori 20x20 a 10cm di distanza) ---
 L1 = 40.0; W1 = 20.0
 L2 = 40.0; W2 = 20.0
-Z = 135.0
+Z = 136.0
 N_ITERATIONS = 500
 
 G, delta_G, Omega_eff, delta_Omega = geometric_factor_montecarlo(L1, W1, L2, W2, Z, N=N_ITERATIONS)
