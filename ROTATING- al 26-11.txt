@@ -605,17 +605,67 @@ Una rapida stima di tempistiche: prendiamo una decina di misure su e giù (o anc
 Continuiamo domani con le misure, per ora abbiamo 3 punti (sigh sigh) per le UP. Giriamo a 90° in senso antiorario, start alle 10:28.
 
 \section{27/11}
-Presa dati a 90° iniziata il 26/11, inizio 10:28 stop presa dati ore ... del 27/11: \\
+Presa dati a 90° iniziata il 26/11, inizio 10:28 stop presa dati ore 14:36 del 27/11: \\
 \begin{table}[H]
     \centering
 \begin{tabular}{|c|c|c|c|c|c|}
 \hline
      PMT1 & PMT2 & PMT4 & triple & doppie 1\&4 \\
     \hline
-     &  &  &  &  \\
+    1046157 & 977130 & 5494318  & 1513 & 3464 \\
     \hline
 \end{tabular}
-\caption{Conteggi su $\sim$ ... h, a 90° in senso antiorario}
+\caption{Conteggi su $\sim$ 28 h, a 90° in senso antiorario}
 \end{table}
 
+Allora iniziamo male: Paoloni ci fa notare che ci serve un'altra unità di coincidenza, così da mettere pure il segnale 1 in coincidenza con se stesso, e poi mettere in coincidenza i due impulsi :((((
+
+Prendiamo un'altra unità di coincidenza, modello CAEN N405 Triple 4-Fold Logic Unit; ci mandiamo in input l'uscita del discriminatore 1, prendiamo l'uscita OUT (regoliamo al minimo la larghezza dell'impulso, che è stabile, si gode!). Facciamo la stessa cosa col 4 (stessa unità di coincidenza, quella nuova). Larghezza degli impulsi $\sim6$ ns. Ritardiamo l'impulso 1 con la scatola dei ritardi e mandiamo il ritardato in coincidenza con l'impulso del 4. Ritardo cavi:
+\begin{itemize}
+\item 1: discr $\rightarrow$ self coinc = 3 ns, + self coinc $\rightarrow$ ritardo = 4, + ritardo $\rightarrow$ coinc = 4. TOT: +3+4+4
+\item 4: discr $\rightarrow$ self coinc = 3 ns, + self coinc $\rightarrow$ coinc = 4. TOT: +3+4.
+\end{itemize}
+Quindi il ritardo introdotto rispetto a quello in scatola è +4, supponendo che i due canali usati per le coincidenze self introducano lo stesso ritardo. Range per selezionare solo UP: $\Delta t_4-TOF\le r_{scatola}+4ns\le \Delta t_4+TOF-s\sim9ns$, cioè $-3ns\le r_{scatola}\text{ (comprende +2.5 ns)}\le5ns$. 
+
+Ci aspettiamo che la curva per DOWN sia analoga a quella per UP, ma shiftata: il range di ritardo per selezionare solo dal basso è uguale a quello per selezionare solo dall'alto con telescopio UP, ma i conteggi saranno minori, mentre i plateau saranno identici (seleziono tutto o niente).
+
+\begin{table}[H]
+    \centering
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+     Rit. impostato(+4 cavo +2.5 delay interno) [ns] & sovr. (6+5-4-$r_{scatolaTOT}$) [ns] &  1\&4UP &  1\&4DOWN \\
+    \hline
+    -6.5(+0 cavo!!!, 0 impostato da scatola) & 11(sovrapposto tuttu) & 340 &  \\
+    \hline
+    -4(+0 cavo!!!, 0 impostato da scatola) & 8.5(sovrapposto tuttu) & 376 &  \\
+    \hline
+    -2(+2 cavo!!!, 0 impostato da scatola) & 6.5(sovrapposto tuttu) & 341 &  \\
+    \hline
+     0 & 4.5 & 294 &  \\
+    \hline
+     2 & 2.5 & 213 &  \\
+    \hline
+     3 & 1.5 & 145 &  \\
+    \hline
+     4 & 0.5 & 40 &  \\
+    \hline
+     6 & -1.5 & 4 &  \\
+     \hline
+     8 & -2.5 & 12 &  \\
+     \hline
+     10 & -3.5 & 5 &  \\
+    \hline
+    
+\end{tabular}
+\caption{MISURE RI-RI-RI-RI-PRESE, per 1000 s. \textcolor{blue}{In realtà la prima misura è fatta con gli stessi cavi della seconda MA senza scatola. Per semplicità modifichiamo il dato dalla tabella, in modo che sia consistente con gli altri!}}
+\end{table}
+
+Domanda: vogliamo vedere anche il plateau a sx? Sì. Possiamo agire su: cavi di 1 (diminuire, es. mettendo cavo da 2) e/o cavi di 4 (aumentare, es. mettendo cavi da 6). \textcolor{red}{OCIO A LEVARE SCATOLA!!!}. Scopriamo che \textcolor{red}{LA SCATOLA INTRODUCE UN DELAY INTRINSECO DI +2.5 ns!!!}
+
+Facciamo grafico, fittando con una sigmoide. Continuiamo la prox volta coi conteggi DOWN.
+
+\section{2/12}
+
+
 \end{document}
+
