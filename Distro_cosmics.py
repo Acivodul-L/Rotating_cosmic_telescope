@@ -3,10 +3,10 @@ from scipy.optimize import curve_fit
 import matplotlib.pyplot as plt
 
 # Dati forniti
-pairs = np.array([3464, 6025, 10708, 3272, 11643, 5266, 3278])
-triples = np.array([1513, 4519, 8404, 2785, 9321, 3819, 1442])
-times = np.array([1680, 855, 870, 144, 1020, 840, 1620]) * 60 # s
-angles = np.array([-np.pi/2, -np.pi/3, -np.pi/4, 0, np.pi/4, np.pi/3, np.pi/2])
+pairs = np.array([3464, 6025, 10708, 3272, 2677, 11643, 5266, 3278])
+triples = np.array([1513, 4519, 8404, 2785, 2267, 9321, 3819, 1442])
+times = np.array([1680, 855, 870, 144, 122 ,1020, 840, 1620]) * 60 # s
+angles = np.array([-np.pi/2, -np.pi/3, -np.pi/4, 0, np.pi/12, np.pi/4, np.pi/3, np.pi/2])
 sigma = 0.043 # str, sottostimato
 S = 0.2*0.4 # m^2
 
