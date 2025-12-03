@@ -3,10 +3,10 @@ from scipy.optimize import curve_fit
 import matplotlib.pyplot as plt
 
 # Dati forniti
-pairs = np.array([3464, 10708, 2449, 11643, 5266, 3278])
-triples = np.array([1513, 8404, 2040, 9321, 3819, 1442])
-times = np.array([1680, 870, 60, 1020, 840, 1620]) * 60 # s
-angles = np.array([-np.pi/2, -np.pi/4, 0, np.pi/4, np.pi/3, np.pi/2])
+pairs = np.array([3464, 6025, 10708, 3272, 11643, 5266, 3278])
+triples = np.array([1513, 4519, 8404, 2785, 9321, 3819, 1442])
+times = np.array([1680, 855, 870, 144, 1020, 840, 1620]) * 60 # s
+angles = np.array([-np.pi/2, -np.pi/3, -np.pi/4, 0, np.pi/4, np.pi/3, np.pi/2])
 sigma = 0.043 # str, sottostimato
 S = 0.2*0.4 # m^2
 
@@ -14,15 +14,13 @@ print(sigma*S)
 rate_pairs = pairs/times
 rate_triples = triples/times
 
-eff = triples/pairs #Valido solo per i pairs, ma al momento lo si usa anche per i triples
 
-
-flux_pairs = rate_pairs/(sigma*S*eff)
-flux_triples = rate_triples/(sigma*S*eff)
+flux_pairs = rate_pairs/(sigma*S)
+flux_triples = rate_triples/(sigma*S)
 
 # Assumendo che il dato 'sigma' sia la sezione d'urto [cm^2] e S sia l'area del detector [cm^2]
 # Se sigma è in str (steradianti), e S in m^2, le unità di flusso sono (eventi/s)/(str*m^2)
-d_flux_pairs = np.sqrt(pairs)/(times*sigma*S*eff)
+d_flux_pairs = np.sqrt(pairs)/(times*sigma*S)
 d_flux_triples = np.sqrt(triples*(1-triples/pairs))/(times*sigma*S)
 
 
