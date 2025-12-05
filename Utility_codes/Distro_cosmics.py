@@ -3,10 +3,10 @@ from scipy.optimize import curve_fit
 import matplotlib.pyplot as plt
 
 # Dati forniti
-pairs = np.array([3464, 6025, 10708, 3272, 2677, 11643, 5266, 3278])
-triples = np.array([1513, 4519, 8404, 2785, 2267, 9321, 3819, 1442])
-times = np.array([1680, 855, 870, 144, 122 ,1020, 840, 1620]) * 60 # s
-angles = np.array([-np.pi/2, -np.pi/3, -np.pi/4, 0, np.pi/12, np.pi/4, np.pi/3, np.pi/2])
+pairs = np.array([3464, 6025, 10708, 3272, 2677, 25397, 11643, 5266, 3278])
+triples = np.array([1513, 4519, 8404, 2785, 2267, 21100, 9321, 3819, 1442])
+times = np.array([1680, 855, 870, 144, 122, 1678, 1020, 840, 1620]) * 60 # s
+angles = np.array([-np.pi/2, -np.pi/3, -np.pi/4, 0, np.pi/12, np.pi/6, np.pi/4, np.pi/3, np.pi/2])
 sigma = 0.043 # str, sottostimato
 S = 0.2*0.4 # m^2
 
@@ -36,7 +36,7 @@ def fit_function(x, A, b, c, d):
 
 
 # Parametri iniziali (p0): [A, b, c, d]
-p0_guess = [200, 0.0, 2.5, 0.0] # Aggiustato 'c' a 2.0 per una stima più tipica
+p0_guess = [100, 0.0, 2.5, 2.0] # Aggiustato 'c' a 2.0 per una stima più tipica
 
 # --- Esecuzione dei Fit e Stampa Risultati (Codice invariato) ---
 
