@@ -16,10 +16,11 @@ V = np.array([750, 775, 788, 800, 825, 850, 875])
 triple1= np.array([8, 15, 26, 28, 33, 42, 37])
 doppie1 = np.array([56, 55, 63, 57, 59, 63, 61])
 varepsilon1 = (triple1/doppie1)
-sigmavarepsilon1= np.sqrt((varepsilon1*(1-varepsilon1))/(doppie1))
-
+sigmavarepsilon1= np.sqrt((varepsilon1*(1-varepsilon1))/(doppie1))   #ERRORE DATO DALLE MISURE
 epsilon1 = varepsilon1/0.565
-#sigmaepsilon1 =
+sigmavarepsilon1_1 = 0.0035 #ERRORE RELATIVO DATO DALL'ACCETTANZA
+
+sigmaepsilon1 = (np.sqrt((sigmavarepsilon1/varepsilon1)**2+(sigmavarepsilon1_1)**2)) * epsilon1
 
 
 triple3 = np.array([25 ,25 ,33 ,33, 24, 31,33])
@@ -37,9 +38,14 @@ V4 = np.array([725, 750, 775, 788, 800, 825, 850, 875])
 triple4 = np.array([29, 52 ,51, 59, 53, 58, 61 ,57])
 doppie4 = np.array([390, 370 ,369, 395, 368, 393, 374 ,373])
 varepsilon4 = (triple4/doppie4)
-sigmavarepsilon4 = np.sqrt((varepsilon4*(1-varepsilon4))/(doppie4))
-
+sigmavarepsilon4 = np.sqrt((varepsilon4*(1-varepsilon4))/(doppie4))  #ERRORE DATO DALLE MISURE DI VAREPSILON
 epsilon4 = varepsilon4/0.13
+sigmavarepsilon4_1 = 0.0048     #ERRORE DATO DALL'ACCETTANZA (RELATIVO)
+
+
+sigmaepsilon4 = (np.sqrt((sigmavarepsilon4/varepsilon4)**2+(sigmavarepsilon4_1)**2)) * epsilon4   #SOMMA IN QUADRATURA DEGLI ERR RELATIVI PER OTTENERE L'ERR RELATIVO TOT, MOLTIPLICATO POI PER LA MISURA STESSA
+
+
 #0.467
 #Converti errori percentuali in errori assoluti
 '''
@@ -58,7 +64,7 @@ plt.grid(which="both", ls="dashed", color="gray")
 
 # Plot con barre d’errore
 
-plt.errorbar(V, epsilon1,  fmt='o', color='orange' , label=r'$\epsilon_1$', capsize=3)
+plt.errorbar(V, epsilon1, yerr=sigmaepsilon1,  fmt='o', color='orange' , label=r'$\epsilon_1$', capsize=3)
 #plt.errorbar(V, varepsilon1, yerr=sigmavarepsilon1, fmt='.', color= 'red', label=r'$\bar{\epsilon}_1$', capsize=3)
 
 plt.errorbar(V2, epsilon2, yerr= sigmaepsilon2,  fmt='.',color= 'green', label=r'$\epsilon_2$', capsize=3)
@@ -68,7 +74,7 @@ plt.errorbar(V2, epsilon2, yerr= sigmaepsilon2,  fmt='.',color= 'green', label=r
 
 
 #CON IL RICALCOLO
-plt.errorbar(V4, epsilon4,  fmt='o', color='purple' , label=r'$\epsilon_4$', capsize=3)
+plt.errorbar(V4, epsilon4, yerr=sigmaepsilon4, fmt='o', color='purple' , label=r'$\epsilon_4$', capsize=3)
 #plt.errorbar(V, varepsilon4, fmt='.', color= 'red', label=r'$\bar{\epsilon}_3_1$', capsize=3)
 
 
