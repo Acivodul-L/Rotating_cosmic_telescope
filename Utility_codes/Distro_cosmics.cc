@@ -32,20 +32,20 @@ void fit_flux() {
     const int n_points = 10;
     
     // Dati grezzi
-    double pairs_raw[] = {3464, 6025, 10708, 18842, 3272, 2677, 25397, 11643, 5266, 3278};
-    double triples_raw[] = {1513, 4519, 8404, 15843, 2785, 2267, 21100, 9321, 3819, 1442};
+    double pairs_raw[] = {3464, 6025, 10708, 18842, 3574, 3272, 2677, 25397, 11643, 5266, 3278};
+    double triples_raw[] = {1513, 4519, 8404, 15843, 3042, 2785, 2267, 21100, 9321, 3819, 1442};
     
     // Conteggi singoli per il calcolo del buio
-    double singles_1[] = {1046157, 591662, 673483, 0, 108863, 0, 0, 765830, 0, 1043397}; //MANCANO DEI DATI
-    double singles_2[] = {977130, 554116, 641943, 0, 104272, 0, 0, 774706, 0, 928795};
-    double singles_4[] = {5494318, 3050526, 3189050, 0, 448241, 0, 0, 3345766, 0, 5114312};
+    double singles_1[] = {1046157, 591662, 673483, 0, 144500, 108863, 0, 0, 765830, 0, 1043397}; //MANCANO DEI DATI
+    double singles_2[] = {977130, 554116, 641943, 0, 138248, 104272, 0, 0, 774706, 0, 928795};
+    double singles_4[] = {5494318, 3050526, 3189050, 0, 603573, 448241, 0, 0, 3345766, 0, 5114312};
     
     // Tempi in minuti
-    double times_min[] = {1680, 855, 870, 1065, 144, 122, 1678, 1020, 840, 1620}; 
+    double times_min[] = {1680, 855, 870, 1065, 170, 144, 122, 1678, 1020, 840, 1620}; 
     
     // Angoli in radianti
     double angles[] = {
-        -TMath::Pi()/2, -TMath::Pi()/3, -TMath::Pi()/4, -TMath::Pi()/6, 
+        -TMath::Pi()/2, -TMath::Pi()/3, -TMath::Pi()/4, -TMath::Pi()/6, -TMath::Pi()/12,
         0.0, 
         TMath::Pi()/12, TMath::Pi()/6, TMath::Pi()/4, TMath::Pi()/3, TMath::Pi()/2
     };
