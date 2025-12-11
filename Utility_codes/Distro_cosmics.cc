@@ -13,7 +13,9 @@
 
 // --- DEFINIZIONE FUNZIONE DI FIT ---
 Double_t fitFunction(Double_t *x, Double_t *par) {
-    Double_t angle = x[0];
+  //Rendiamo l'asse x in unità di pi
+    Double_t angle = x[0] * TMath::Pi(); 
+    
     Double_t A = par[0];
     Double_t b = par[1];
     Double_t c = par[2];
@@ -95,7 +97,9 @@ void fit_flux() {
 
     for(int i = 0; i < n_points; i++) {
         double time_sec = times_min[i] * 60.0;
-        x_val[i] = angles[i];
+        //Normalizziamo l'asse X dividendo per Pi Greco
+        x_val[i] = angles[i] / TMath::Pi(); 
+
 
         // --- A. Calcolo Buio (Accidentali) ---
         if (singles_1[i] > 0 && singles_4[i] > 0 && time_sec > 0) {
@@ -121,7 +125,7 @@ void fit_flux() {
         // Nota: Qui ignoriamo le coincidenze triple di buio, se erano trascurabili prima lo saranno anche ora 
         double denom_trip = time_sec * sigma * S * eff_coinc_trip;
         
-        y_triples[i] = (triples_raw[i])/ denom;    
+        y_triples[i] = (triples_raw[i])/ denom_trip;    
         y_triples_err[i] =  y_triples[i] * sqrt((1/triples_raw[i])+ pow((eff_coinc_trip_err/eff_coinc_trip), 2.0));
         
     }
@@ -131,13 +135,14 @@ void fit_flux() {
     TGraphErrors *gr_triples = new TGraphErrors(n_points, x_val.data(), y_triples.data(), x_err.data(), y_triples_err.data());
 
     // 7. FIT
-    TF1 *f_pairs = new TF1("f_pairs", fitFunction, -TMath::Pi()/2-0.5, TMath::Pi()/2 + 0.5, 4);
+    // Range modificati: da -0.8 a +0.8 (copre abbondantemente -0.5 e +0.5)
+    TF1 *f_pairs = new TF1("f_pairs", fitFunction, -0.8, 0.8, 4);
     f_pairs->SetParNames("A", "b", "c", "d");
     f_pairs->SetLineColor(kBlue);
     f_pairs->SetLineStyle(2); 
     f_pairs->SetParameters(100, 0.0, 3.5, 20);
 
-    TF1 *f_triples = new TF1("f_triples", fitFunction, -TMath::Pi()/2-1, TMath::Pi()/2 + 1, 4);
+    TF1 *f_triples = new TF1("f_triples", fitFunction, -0.8, 0.8, 4);
     f_triples->SetParNames("A", "b", "c", "d");
     f_triples->SetLineColor(kRed);
     f_triples->SetLineStyle(2);
@@ -160,19 +165,17 @@ void fit_flux() {
     
     // Pairs
     gr_pairs->Draw("AP");
-
-    // --- MODIFICA QUI: Impostazione Limiti ---
     
     // 1. Allarghiamo l'asse X per vedere bene i punti a +/- Pi/2
     // Impostiamo da -2.0 a +2.0 (Pi/2 è circa 1.57, quindi ci stiamo larghi)
-    gr_pairs->GetXaxis()->SetLimits(-2.0, 2.0); 
+    gr_pairs->GetXaxis()->SetLimits(-0.5, 0.5); 
 
     // 2. Impostiamo l'asse Y (Minimo e Massimo)
     // Esempio: da 0 a 160 (o un valore poco sopra il tuo massimo flusso)
     gr_pairs->GetYaxis()->SetRangeUser(0.0, 160.0);
 
     // Titoli assi (opzionale ma consigliato per chiarezza)
-    gr_pairs->GetXaxis()->SetTitle("Angolo [rad]");
+    gr_pairs->GetXaxis()->SetTitle("Angolo [rad/pi]");
     gr_pairs->GetYaxis()->SetTitle("Flusso [Hz/sr/m^2]");
 
     // Triples
