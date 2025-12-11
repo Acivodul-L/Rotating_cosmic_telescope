@@ -32,9 +32,9 @@ epsilon3 = varepsilon3/0.1037
 
 
 #RICALCOLO CON PMT2, 3, 4
-V4 = np.array([ 725, 750, 775, 788, 800, 825, 850, 875])
-triple4 = np.array([ 29, 52 ,51, 59, 53, 58, 61 ,57])
-doppie4 = np.array([ 390, 370 ,369, 395, 368, 393, 374 ,373])
+V4 = np.array([ 650, 700, 725, 750, 775, 788, 800, 825, 850, 875])
+triple4 = np.array([ 3, 39, 29, 52 ,51, 59, 53, 58, 61 ,57])
+doppie4 = np.array([ 390, 432, 390, 370 ,369, 395, 368, 393, 374 ,373])
 varepsilon4 = (triple4/doppie4)
 sigmavarepsilon4 = np.sqrt((varepsilon4*(1-varepsilon4))/(doppie4))  #ERRORE DATO DALLE MISURE DI VAREPSILON
 epsilon4 = varepsilon4/0.13
@@ -53,7 +53,7 @@ def cost(x, k):
 plt.figure("Efficienza", figsize=(9, 8))
 plt.grid(which="both", ls="dashed", color="gray")
 
-x_fit = np.linspace(700, 900, 200)
+x_fit = np.linspace(500, 900, 200)
 
 # FIT PMT1
 p0_1 = [0.7, 800, 0.1, 0.5]
@@ -100,7 +100,7 @@ for i in range(len(popt2)):
         print(f'{i}-param = {popt2[i]:.3f} +/- {perr2[i]:.3f}')
 
 # FIT PMT4
-p0_4 = [176, 716, 0.13, 0.6]
+p0_4 = [1.7, 700, 0.13, 0.0]
 popt4, pcov4 = curve_fit( #Fit con tutti i punti eccetto il primo (outlier) 
             f=arctan, 
             xdata=V4[1:], 

@@ -12,6 +12,20 @@
 #include "TStyle.h"
 #include "TString.h"
 
+#include <iostream>
+#include <vector>
+#include <cmath>
+#include "TGraphErrors.h"
+#include "TF1.h"
+#include "TCanvas.h"
+#include "TAxis.h"
+#include "TLegend.h"
+#include "TStyle.h"
+#include "TMath.h"
+#include "TString.h"
+#include "TPaveStats.h"
+
+
 // =============================================================
 // PARAMETRI GLOBALI
 // =============================================================
@@ -73,13 +87,13 @@ void process_file(const char* filename, TH1F* histogram) {
 // =============================================================
 // FUNZIONE PRINCIPALE
 // =============================================================
-void make_hist(const char* fileUp = "NANO_0_UP.txt", const char* fileDown = "NANO_0_DOWN.txt") {
+void make_hist(const char* fileUp = "NANO_90_UP.txt", const char* fileDown = "NANO_90_DOWN.txt") {
     
     gStyle->SetOptStat(0); 
 
     // --- CONFIGURAZIONE ASSI ---
     const double BIN_WIDTH = 5.0;   
-    const double MAX_RANGE = 25.0; 
+    const double MAX_RANGE = 100.0; 
 
     int n_bins = (int)((2 * MAX_RANGE) / BIN_WIDTH) + 1;
     double min_val = -(n_bins * BIN_WIDTH) / 2.0;
@@ -188,3 +202,28 @@ void make_hist(const char* fileUp = "NANO_0_UP.txt", const char* fileDown = "NAN
     
     std::cout << "Grafico normalizzato generato." << std::endl;
 }
+
+void make_plot(){
+
+  double times_fly[] = {4.58, 4.35, 3.92, 0.54};
+  double times_fly_err[] = {0.14, 0.06, 0.11, 0.16};
+  double angles[] = {0.0, 1.0/6.0, 1.0/3.0, 1.0/2.0};
+  double angles_err[] = {0.0, 0.0, 0.0, 0.0};
+  
+  const int n = 4;
+
+  auto *fly_times = new TGraphErrors(n, angles, times_fly, angles_err, times_fly_err);
+
+    fly_times->SetTitle("Distribuzione TOF;Angolo [rad/pi];TOF [ns]");
+    fly_times->SetMarkerStyle(21); 
+    fly_times->SetMarkerColor(kBlue);
+    fly_times->SetLineColor(kBlue);
+   
+    fly_times->GetXaxis()->SetLimits(-0.1, (1.0/2.0)*1.1); 
+    fly_times->GetYaxis()->SetRangeUser(0.0, 5.0);
+    
+   fly_times->Draw("ALP");
+}
+
+
+
