@@ -1,3 +1,6 @@
+//.L Distro_cosmics.cc
+//fit_flux() per fare i fit e plottare i dati sia di triple che di doppie
+
 #include <iostream>
 #include <vector>
 #include <cmath>

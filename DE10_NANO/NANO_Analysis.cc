@@ -1,3 +1,10 @@
+//.L NANO_Analysis.cc
+//TOF_hist() se vuoi fare l'istogramma con i file UP e DOWN predefiniti
+//TOF_hist("NANO_45_UP.txt", "NANO_45_DOWN.txt", 25.0) Se si vogliono vedere file diversi o allargare/stringere l'istogramma
+//angle_vs_TOF() Per fare il plot dei tempi di volo rispetto all'angolo
+
+
+
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -87,13 +94,12 @@ void process_file(const char* filename, TH1F* histogram) {
 // =============================================================
 // FUNZIONE PRINCIPALE
 // =============================================================
-void make_hist(const char* fileUp = "NANO_90_UP.txt", const char* fileDown = "NANO_90_DOWN.txt") {
+void TOF_hist(const char* fileUp = "NANO_0_UP.txt", const char* fileDown = "NANO_0_DOWN.txt", const double MAX_RANGE = 25.0) {
     
     gStyle->SetOptStat(0); 
 
     // --- CONFIGURAZIONE ASSI ---
     const double BIN_WIDTH = 5.0;   
-    const double MAX_RANGE = 100.0; 
 
     int n_bins = (int)((2 * MAX_RANGE) / BIN_WIDTH) + 1;
     double min_val = -(n_bins * BIN_WIDTH) / 2.0;
@@ -203,14 +209,14 @@ void make_hist(const char* fileUp = "NANO_90_UP.txt", const char* fileDown = "NA
     std::cout << "Grafico normalizzato generato." << std::endl;
 }
 
-void make_plot(){
+void angle_vs_TOF(){
 
-  double times_fly[] = {4.58, 4.35, 3.92, 0.54};
-  double times_fly_err[] = {0.14, 0.06, 0.11, 0.16};
-  double angles[] = {0.0, 1.0/6.0, 1.0/3.0, 1.0/2.0};
-  double angles_err[] = {0.0, 0.0, 0.0, 0.0};
+  double times_fly[] = {4.58, 4.35, 4.71, 3.92, 0.54};
+  double times_fly_err[] = {0.14, 0.06, 0.16, 0.11, 0.16};
+  double angles[] = {0.0, 1.0/6.0, 1.0/4.0, 1.0/3.0, 1.0/2.0};
+  double angles_err[] = {0.0, 0.0, 0.0, 0.0, 0.0};
   
-  const int n = 4;
+  const int n = 5;
 
   auto *fly_times = new TGraphErrors(n, angles, times_fly, angles_err, times_fly_err);
 
