@@ -1,3 +1,6 @@
+//.L Calibration.cc
+//AnalyzeCalibration()
+
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -65,7 +68,7 @@ void AnalyzeCalibration() {
             double std_err = (n > 0) ? std_dev / std::sqrt(n) : 0.0;
 
             // Calcolo X: Calibration_1 -> 5ns, Calibration_2 -> 10ns, ecc.
-            double delay_val = fileCounter * 5.0;
+            double delay_val = 5.0 + fileCounter * 5.0;
 
             x_delay_ns.push_back(delay_val);
             y_cycles.push_back(mean);
